@@ -1,5 +1,3 @@
-[core]
-    remote = dvc-storage
-    autostage = true
-['remote "dvc-storage"']
-    url = s3://demo-bucket-f4t/dev/5ab7307/demo
+['remote "origin"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/6580danish/mlops-dvc-mlflow-template.s3

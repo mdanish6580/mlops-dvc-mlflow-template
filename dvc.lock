@@ -59,14 +59,14 @@ stages:
       size: 536
     - path: src/cnnClassifier/components/train_model.py
       hash: md5
-      md5: b0210ebaf03e7bb3f7d897e183e5eb06
-      size: 984
+      md5: 71a7565a724061e77e8ab7adcd4c1a75
+      size: 2397
     params:
       params.yaml:
         env: dev
     outs:
     - path: model
       hash: md5
-      md5: 8a8d428f67d02eab58e2decfcd2275df.dir
-      size: 145032
+      md5: fbe9c795858d1d445faca29a4d8c48f3.dir
+      size: 135592
       nfiles: 1
