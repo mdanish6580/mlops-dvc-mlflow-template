@@ -44,7 +44,7 @@ def train_model(data_path, model_path, n_estimators, max_depth):
         mlflow.log_metric("mae", mae)
         
         # For remote server only (Dagshub)
-        remote_server_uri = "https://dagshub.com/bappymalik4161/mlflow-test.mlflow"
+        remote_server_uri = "https://dagshub.com/6580danish/mlops-dvc-mlflow-template.mlflow"
         mlflow.set_tracking_uri(remote_server_uri)
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
