@@ -1,0 +1,5 @@
+[core]
+    remote = dvc-storage
+    autostage = true
+['remote "dvc-storage"']
+    url = s3://demo-bucket-f4t/dev/5ab7307/demo

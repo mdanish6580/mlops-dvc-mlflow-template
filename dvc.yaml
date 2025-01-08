@@ -1,0 +1,35 @@
+stages:
+  data_ingestion:
+    cmd: python src/cnnClassifier/components/data_ingestion.py s3://demo-bucket-f4t/dev/raw_data.csv data/raw/raw_data.csv
+    deps:
+      - src/cnnClassifier/components/data_ingestion.py
+      - params.yaml
+    params:
+      - env
+    outs:
+      - data/raw/raw_data.csv:
+          cache: false
+
+  data_preprocessing:
+    cmd: python src/cnnClassifier/components/data_preprocessing.py data/raw/raw_data.csv data/processed/dev_preprocessed_data.csv 0.2 42
+    deps:
+      - src/cnnClassifier/components/data_preprocessing.py
+      - data/raw/raw_data.csv
+      - params.yaml
+    params:
+      - env
+    outs:
+      - data/processed:
+          cache: false
+
+  model_training:
+    cmd: python src/cnnClassifier/components/train_model.py data/processed/dev_preprocessed_data.csv model/model_dev.pkl 50 5
+    deps:
+      - src/cnnClassifier/components/train_model.py
+      - data/processed/dev_preprocessed_data.csv
+      - params.yaml
+    params:
+      - env
+    outs:
+      - model:
+          cache: false

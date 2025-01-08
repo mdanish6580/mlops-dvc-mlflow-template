@@ -1,0 +1,49 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      # Install required dependencies
+      - pip install -r requirements.txt
+
+  pre_build:
+    commands:
+      # Fetch Git commit hash
+      - export GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+      - echo "Git Commit Hash: $GIT_COMMIT_HASH"
+      # Set run ID (unique for each pipeline execution)
+      - export RUN_ID=${CODEBUILD_BUILD_ID:-$(uuidgen)}
+      - echo "Run ID: $RUN_ID"
+      # Set environment (prod or dev)
+      # - export ENVIRONMENT=${CODEBUILD_ENVIRONMENT:-dev}
+      - export ENVIRONMENT=dev
+      - echo "Environment: $ENVIRONMENT"
+      # Prepare S3 paths for processed data and models
+      - export BASE_S3_PATH=s3://demo-bucket-f4t/$ENVIRONMENT/$GIT_COMMIT_HASH/$RUN_ID
+      - echo "Base S3 Path: $BASE_S3_PATH"
+
+  build:
+    commands:
+      # Run the DVC pipeline
+      - echo "Running DVC pipeline..."
+      - dvc repro
+      # Push artifacts to remote storage
+      - echo "Pushing artifacts to DVC remote..."
+      - dvc push
+      # Sync models and processed data dynamically
+      - echo "Syncing processed data and models to S3 dynamically..."
+      - aws s3 sync model/ $BASE_S3_PATH/model/
+      - aws s3 sync data/ $BASE_S3_PATH/data/
+
+artifacts:
+  files:
+    - models/*
+    - data/processed/*
+    - dvc.lock
+    - params.yaml
+
+cache:
+  paths:
+    - '.dvc/cache'

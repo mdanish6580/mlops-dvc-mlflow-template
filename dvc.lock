@@ -1,0 +1,72 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/cnnClassifier/components/data_ingestion.py s3://demo-bucket-f4t/dev/raw_data.csv
+      data/raw/raw_data.csv
+    deps:
+    - path: params.yaml
+      hash: md5
+      md5: 5151deb5ee03c1c864408728ae201925
+      size: 536
+    - path: src/cnnClassifier/components/data_ingestion.py
+      hash: md5
+      md5: ef8690ffcc4bb08fc5240ab7c1c8115c
+      size: 580
+    params:
+      params.yaml:
+        env: dev
+    outs:
+    - path: data/raw/raw_data.csv
+      hash: md5
+      md5: 2309cc5f04782ed9bb6016d9f4e381cf
+      size: 61194
+  data_preprocessing:
+    cmd: python src/cnnClassifier/components/data_preprocessing.py data/raw/raw_data.csv
+      data/processed/dev_preprocessed_data.csv 0.2 42
+    deps:
+    - path: data/raw/raw_data.csv
+      hash: md5
+      md5: 2309cc5f04782ed9bb6016d9f4e381cf
+      size: 61194
+    - path: params.yaml
+      hash: md5
+      md5: 5151deb5ee03c1c864408728ae201925
+      size: 536
+    - path: src/cnnClassifier/components/data_preprocessing.py
+      hash: md5
+      md5: 19e30b2c91afe34a2a5e1f60c0acc51e
+      size: 952
+    params:
+      params.yaml:
+        env: dev
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 65a3ac6540bb60d1f4f664caf28d0ad2.dir
+      size: 14349
+      nfiles: 1
+  model_training:
+    cmd: python src/cnnClassifier/components/train_model.py data/processed/dev_preprocessed_data.csv
+      model/model_dev.pkl 50 5
+    deps:
+    - path: data/processed/dev_preprocessed_data.csv
+      hash: md5
+      md5: 7d772a0245f8d514a94d916a41fdaea1
+      size: 14349
+    - path: params.yaml
+      hash: md5
+      md5: 5151deb5ee03c1c864408728ae201925
+      size: 536
+    - path: src/cnnClassifier/components/train_model.py
+      hash: md5
+      md5: b0210ebaf03e7bb3f7d897e183e5eb06
+      size: 984
+    params:
+      params.yaml:
+        env: dev
+    outs:
+    - path: model
+      hash: md5
+      md5: 8a8d428f67d02eab58e2decfcd2275df.dir
+      size: 145032
+      nfiles: 1
